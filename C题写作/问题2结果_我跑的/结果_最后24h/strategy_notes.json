@@ -1,0 +1,98 @@
+[
+  {
+    "strategy": "carbon_renewable",
+    "note": "低碳与新能源协同：同时重视低碳强度和新能源消纳。",
+    "weights": {
+      "cost": 0.6,
+      "carbon": 1200.0,
+      "latency": 1.5,
+      "renewable": 350.0,
+      "congestion": 80.0,
+      "unassigned": 1000000000.0
+    }
+  },
+  {
+    "strategy": "balanced",
+    "note": "综合权衡：成本、碳排、时延、新能源和拥塞均衡考虑。",
+    "weights": {
+      "cost": 1.0,
+      "carbon": 500.0,
+      "latency": 2.0,
+      "renewable": 100.0,
+      "congestion": 100.0,
+      "unassigned": 1000000000.0
+    }
+  },
+  {
+    "strategy": "renewable_first",
+    "note": "新能源消纳优先：更倾向新能源富余区域和时段。",
+    "weights": {
+      "cost": 0.6,
+      "carbon": 500.0,
+      "latency": 1.0,
+      "renewable": 450.0,
+      "congestion": 80.0,
+      "unassigned": 1000000000.0
+    }
+  },
+  {
+    "strategy": "carbon_first",
+    "note": "低碳优先：更倾向低碳强度区域和时段。",
+    "weights": {
+      "cost": 0.7,
+      "carbon": 1600.0,
+      "latency": 1.0,
+      "renewable": 80.0,
+      "congestion": 100.0,
+      "unassigned": 1000000000.0
+    }
+  },
+  {
+    "strategy": "cost_carbon",
+    "note": "成本与碳排协同：适合比较经济性和减排性。",
+    "weights": {
+      "cost": 2.0,
+      "carbon": 1000.0,
+      "latency": 1.0,
+      "renewable": 60.0,
+      "congestion": 120.0,
+      "unassigned": 1000000000.0
+    }
+  },
+  {
+    "strategy": "load_balanced",
+    "note": "负载均衡优先：更强惩罚接近容量上限的候选方案。",
+    "weights": {
+      "cost": 0.7,
+      "carbon": 450.0,
+      "latency": 1.5,
+      "renewable": 80.0,
+      "congestion": 600.0,
+      "unassigned": 1000000000.0
+    }
+  },
+  {
+    "strategy": "cost_first",
+    "note": "成本优先：更倾向低电价时段和区域。",
+    "weights": {
+      "cost": 3.0,
+      "carbon": 150.0,
+      "latency": 1.0,
+      "renewable": 30.0,
+      "congestion": 100.0,
+      "unassigned": 1000000000.0
+    }
+  },
+  {
+    "strategy": "latency_first",
+    "note": "服务质量优先：更倾向低网络时延、本地或近区执行。",
+    "weights": {
+      "cost": 0.6,
+      "carbon": 250.0,
+      "latency": 12.0,
+      "renewable": 30.0,
+      "congestion": 80.0,
+      "unassigned": 1000000000.0
+    }
+  }
+]

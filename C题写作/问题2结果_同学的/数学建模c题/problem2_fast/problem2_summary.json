@@ -1,0 +1,26 @@
+{
+  "solver_used": "greedy",
+  "arrival_hour_start": 0,
+  "arrival_hour_end": 2399,
+  "step_hours": 24,
+  "lookahead_hours": 24,
+  "max_candidates_per_task": 8,
+  "task_count": 50000,
+  "scheduled_count": 48132,
+  "unassigned_count": 1868,
+  "on_time_rate": 0.96264,
+  "total_cost_cny": 2238791.7985303006,
+  "total_carbon_tco2": 2438.461651780167,
+  "renewable_utilization": 0.564646522423869,
+  "total_curtailment_mwh": 5026185.65938016,
+  "system_peak_grid_purchase_mw": 134.0071733233318,
+  "average_latency_ms": 18.83877669741544,
+  "weights": {
+    "cost": 1.0,
+    "carbon": 500.0,
+    "latency": 2.0,
+    "renewable": 100.0,
+    "congestion": 100.0,
+    "unassigned": 1000000000.0
+  }
+}

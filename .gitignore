@@ -1,0 +1,19 @@
+# 大型参考资料与本地缓存（不纳入版本库）
+优秀论文/
+优秀论文.zip
+outputs/
+“华数杯”全国大学生数学建模竞赛历年赛题/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 临时文件
+~$*
+_c_*.txt
+*.tmp
+
+# 操作系统文件
+Thumbs.db
+Desktop.ini
+.DS_Store
