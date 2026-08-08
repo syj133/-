@@ -226,6 +226,103 @@ def plot_efficiency_sensitivity() -> None:
     plt.close(fig)
 
 
+def plot_pareto_exact() -> None:
+    df = pd.read_csv(RESULT_DIR / "pareto_exact.csv")
+    gra = pd.read_csv(RESULT_DIR / "gra_selection.csv")
+    df = df.drop_duplicates(subset="epsilon_frac", keep="last")
+    gra = gra.drop_duplicates(subset="epsilon_frac", keep="last")
+    best_ew = gra.loc[gra["grey_rank"].idxmin()]
+    best_w = gra.loc[gra["grey_rank_w"].idxmin()]
+
+    fig, axes = plt.subplots(1, 2, figsize=(13.5, 4.8))
+    # 左：成本 vs MAD
+    ax = axes[0]
+    ax.plot(df["sys_net_mad_mw"], df["total_cost_cny"] / 1e8, "-o", color="#4C72B0",
+            lw=1.8, ms=5, label="精确 Pareto 前沿（ε-约束）")
+    ax.axhline(0, color="k", lw=0.7)
+    for _, r in df.iterrows():
+        ax.annotate(f"ε={r['epsilon_frac']:.2g}", (r["sys_net_mad_mw"], r["total_cost_cny"] / 1e8),
+                    textcoords="offset points", xytext=(4, -2), fontsize=7, alpha=0.8)
+    for b, mk, lab, c in [(best_ew, "D", "GRA等权最优", "#C44E52"),
+                          (best_w, "s", "GRA加权最优", "#55A868")]:
+        ax.scatter(b["sys_net_mad_mw"], b["total_cost_cny"] / 1e8, marker=mk, s=90,
+                   color=c, zorder=4, label=lab)
+    ax.set_xlabel("净购电波动 MAD（MW）")
+    ax.set_ylabel("运行成本（亿元）")
+    ax.set_title("成本—波动精确 Pareto 前沿")
+    ax.grid(alpha=0.3)
+    ax.legend(fontsize=9)
+    # 右：成本 vs 峰值
+    ax = axes[1]
+    ax.plot(-df["sys_peak_net_mw"], df["total_cost_cny"] / 1e8, "-o", color="#DD8452",
+            lw=1.8, ms=5, label="精确 Pareto 前沿")
+    for _, r in df.iterrows():
+        ax.annotate(f"ε={r['epsilon_frac']:.2g}", (-r["sys_peak_net_mw"], r["total_cost_cny"] / 1e8),
+                    textcoords="offset points", xytext=(4, -2), fontsize=7, alpha=0.8)
+    ax.set_xlabel("外送深度（-峰值净购电，MW）")
+    ax.set_ylabel("运行成本（亿元）")
+    ax.set_title("成本—峰值净购电关系")
+    ax.grid(alpha=0.3)
+    ax.legend(fontsize=9)
+    fig.suptitle("精确 Pareto 前沿与灰色关联决策（ε-约束法）", fontsize=13)
+    fig.tight_layout(rect=(0, 0, 1, 0.94))
+    fig.savefig(FIG_DIR / "pareto_front_exact.png", dpi=150)
+    plt.close(fig)
+
+
+def plot_nsga2_comparison() -> None:
+    cmp = pd.read_csv(RESULT_DIR / "nsga2_comparison.csv")
+    mine = cmp[cmp["method"] == "本文精确Pareto"]
+    theirs = cmp[cmp["method"] == "同学NSGA-II"]
+    fig, axes = plt.subplots(1, 2, figsize=(13.5, 4.8))
+    # 左：成本 vs 总变异波动
+    ax = axes[0]
+    ax.scatter(mine["sys_net_tv_mw"], mine["total_cost_cny"] / 1e8, s=55, color="#4C72B0",
+               zorder=3, label="本文精确Pareto")
+    ax.scatter(theirs["sys_net_tv_mw"], theirs["total_cost_cny"] / 1e8, s=40,
+               color="#C44E52", marker="x", zorder=3, label="同学NSGA-II")
+    ax.set_xlabel("净购电波动-总变异（MW）")
+    ax.set_ylabel("运行成本（亿元）")
+    ax.set_title("成本—波动：精确前沿 vs NSGA-II")
+    ax.grid(alpha=0.3)
+    ax.legend(fontsize=9)
+    # 右：成本 vs 峰值
+    ax = axes[1]
+    ax.scatter(-mine["sys_peak_net_mw"], mine["total_cost_cny"] / 1e8, s=55, color="#4C72B0",
+               zorder=3, label="本文精确Pareto")
+    ax.scatter(-theirs["sys_peak_net_mw"], theirs["total_cost_cny"] / 1e8, s=40,
+               color="#C44E52", marker="x", zorder=3, label="同学NSGA-II")
+    ax.set_xlabel("外送深度（-峰值净购电，MW）")
+    ax.set_ylabel("运行成本（亿元）")
+    ax.set_title("成本—峰值：精确前沿 vs NSGA-II")
+    ax.grid(alpha=0.3)
+    ax.legend(fontsize=9)
+    fig.suptitle("精确 MILP 前沿与 NSGA-II 启发式前沿对比", fontsize=13)
+    fig.tight_layout(rect=(0, 0, 1, 0.94))
+    fig.savefig(FIG_DIR / "nsga2_comparison.png", dpi=150)
+    plt.close(fig)
+
+
+def plot_gra_selection() -> None:
+    gra = pd.read_csv(RESULT_DIR / "gra_selection.csv").drop_duplicates(
+        subset="epsilon_frac", keep="last")
+    fig, ax = plt.subplots(figsize=(10, 4.6))
+    x = np.arange(len(gra))
+    ax.plot(x, gra["grey_grade"], "-o", label="GRA 关联度（等权）")
+    ax.plot(x, gra["grey_grade_w"], "-s", label="GRA 关联度（加权）")
+    ax.plot(x, gra["topsis_score"], "-^", label="TOPSIS 贴近度（加权）")
+    ax.set_xticks(x)
+    ax.set_xticklabels([f"{e:.2g}" for e in gra["epsilon_frac"]], rotation=30, fontsize=8)
+    ax.set_xlabel("波动上限比例 ε")
+    ax.set_ylabel("关联度 / 贴近度")
+    ax.set_title("精确前沿上的灰色关联与 TOPSIS 评价")
+    ax.grid(alpha=0.3)
+    ax.legend(fontsize=9)
+    fig.tight_layout()
+    fig.savefig(FIG_DIR / "gra_selection.png", dpi=150)
+    plt.close(fig)
+
+
 def main() -> None:
     plot_soc_curves()
     plot_net_import()
@@ -235,6 +332,9 @@ def main() -> None:
     plot_tradeoff()
     plot_capacity_sensitivity()
     plot_efficiency_sensitivity()
+    plot_pareto_exact()
+    plot_nsga2_comparison()
+    plot_gra_selection()
     print("图表已生成：", FIG_DIR)
 
 

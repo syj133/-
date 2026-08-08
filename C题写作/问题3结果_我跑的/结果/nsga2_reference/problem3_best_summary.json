@@ -1,0 +1,41 @@
+{
+  "hour_start": 0,
+  "hour_end": 2406,
+  "population": 40,
+  "generations": 30,
+  "baseline": {
+    "baseline_cost_cny": 1801660137.8918867,
+    "baseline_carbon_tco2": 2045367.4752840465,
+    "baseline_peak_net_import_mw": 1907.6381999999999,
+    "baseline_fluctuation_mw": 369997.7463,
+    "baseline_renewable_utilization": 0.3286225213082708
+  },
+  "best_by_gra": {
+    "total_cost_cny": -419828543.1847534,
+    "total_carbon_tco2": 0.0,
+    "system_peak_net_import_mw": -114.0016700000001,
+    "load_fluctuation_mw": 70409.14104905442,
+    "renewable_utilization": 0.6793296467825685,
+    "total_curtailment_mwh": 3703988.969934139,
+    "terminal_soc_shortfall_mwh": 0.0,
+    "objective_cost": -419828543.1847534,
+    "objective_carbon": 0.0,
+    "objective_peak": -114.0016700000001,
+    "objective_fluctuation": 70409.14104905442
+  },
+  "best_params": {
+    "charge_price_w": 0.3006625933918732,
+    "charge_carbon_w": 0.9963984280648875,
+    "charge_renewable_w": 0.6959386306141752,
+    "charge_threshold": 0.6968906301690483,
+    "discharge_price_w": 0.17505148397200937,
+    "discharge_carbon_w": 0.7894199913294688,
+    "discharge_load_w": 0.6,
+    "discharge_threshold": 0.6864777212058243,
+    "charge_rate": 0.3857273599469777,
+    "discharge_rate": 0.24801102888670223,
+    "reserve_frac": 0.8866557428106903,
+    "grid_charge_frac": 0.11088478074731659,
+    "renewable_sell_pref": 1.0
+  }
+}

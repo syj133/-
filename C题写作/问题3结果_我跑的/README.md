@@ -15,6 +15,7 @@
   storage_lp.py  储能协同优化 MILP 模型（约束、目标、指标、校验）
   run_all.py     主程序：求解全部场景并输出结果
   sensitivity.py 敏感性分析（储能容量、充放电效率）
+  pareto_exact.py ε-约束精确 Pareto 前沿 + GRA/TOPSIS 决策 + NSGA-II 对照
   verify.py      结果复核（统一功率平衡/SOC递推/边界/互斥逐项校验）
   analysis.py    图表生成
 结果/
@@ -24,7 +25,12 @@
   constraints_check.json    约束逐项校验
   sensitivity_capacity.csv   储能容量敏感性（0.25/0.5/1.0/1.5/2.0 × 成本/综合权衡）
   sensitivity_efficiency.csv 充放电效率敏感性（Δη = -0.05/0/+0.05，综合权衡）
-图表与分析/                  8 张结果图（SOC、净购电、充放电、对比、权衡、敏感性）
+  pareto_exact.csv           精确 Pareto 前沿（ε-约束，成本 vs 波动）
+  gra_selection.csv          GRA/TOPSIS 多属性决策结果
+  hourly_gra_best.csv        GRA 最优解的逐时方案
+  nsga2_comparison.csv       精确前沿 vs 同学 NSGA-II 前沿对比
+  nsga2_reference/           同学 NSGA-II 结果副本（来源：数学建模c题(1).zip）
+图表与分析/                  11 张结果图（SOC、净购电、充放电、对比、权衡、敏感性、前沿、GRA、NSGA-II 对照）
 ```
 
 ## 关键结果（全时域 0–2406）

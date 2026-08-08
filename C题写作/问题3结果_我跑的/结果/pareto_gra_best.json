@@ -1,0 +1,20 @@
+{
+  "epsilon_frac": 1.0,
+  "total_cost_cny": -459217791.0393696,
+  "total_carbon_tco2": 0.0,
+  "sys_peak_net_mw": -413.52420041662526,
+  "sum_region_peak_mw": -413.52420041662526,
+  "sys_net_mad_mw": 0.5125324859117593,
+  "sys_net_std_mw": 4.982502334163031,
+  "total_renewable_util_pct": 69.51476484459668,
+  "total_curtail_mwh": 3521278.896801922,
+  "total_charge_mwh": 185194.8330202547,
+  "total_discharge_mwh": 161890.53302630666,
+  "total_purchase_mwh": 0.0,
+  "total_export_mwh": 1491718.259354173,
+  "sys_net_tv_mw": 973.0376912241211,
+  "total_cost_cny_reduction": 1.254885914041867,
+  "total_carbon_tco2_reduction": 1.0,
+  "sys_peak_net_mw_reduction": 1.2167728549047403,
+  "sys_net_mad_mw_reduction": 0.9989909132291813
+}

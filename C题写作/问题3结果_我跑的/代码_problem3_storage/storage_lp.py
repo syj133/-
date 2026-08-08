@@ -198,12 +198,17 @@ def _assemble(p: dict, with_storage: bool, objective: str,
 
 
 def _solve(prob: dict, with_storage: bool, integrality: np.ndarray,
-           extra_ub_row=None, extra_ub_rhs=None):
-    """在 prob 基础上（可选追加一行上界约束）求解 LP/MILP。"""
+           extra_rows=None):
+    """在 prob 基础上（可选追加若干行上界约束）求解 LP/MILP。
+
+    extra_rows: [(A_row, rhs), ...]，每项表示 A_row·x ≤ rhs。
+    """
     A_ub, b_ub = prob["A_ub"], prob["b_ub"]
-    if extra_ub_row is not None:
-        A_ub = sp.vstack([A_ub, extra_ub_row]).tocsr()
-        b_ub = np.append(b_ub, extra_ub_rhs)
+    if extra_rows:
+        rows = [r for r, _ in extra_rows]
+        rhs = [rv for _, rv in extra_rows]
+        A_ub = sp.vstack([A_ub] + rows).tocsr()
+        b_ub = np.append(b_ub, rhs)
     if with_storage:
         res = milp(
             prob["c"],
@@ -227,14 +232,24 @@ def _solve(prob: dict, with_storage: bool, integrality: np.ndarray,
 
 def solve_region(p: dict, objective: str = "cost", with_storage: bool = True,
                  ref: dict | None = None, tiebreak_cost: bool = False,
+                 flat_cap: float | None = None, enforce_exclusive: bool = True,
                  verbose: bool = False) -> dict:
     """求解单个区域的储能优化问题，返回结果与指标。"""
     prob = _assemble(p, with_storage, objective, ref)
     integrality = np.zeros(prob["n_vars"], dtype=int)
-    if with_storage:
+    if with_storage and enforce_exclusive:
         for t in range(prob["T"]):
             integrality[prob["i_y"] + t] = 1
-    res = _solve(prob, with_storage, integrality)
+    use_milp = with_storage and enforce_exclusive
+    extra_rows = []
+    if flat_cap is not None:
+        T = prob["T"]
+        dev_cols = [prob["base"] + 2 + t for t in range(T)]
+        row = coo_matrix((np.ones(T, dtype=float),
+                          (np.zeros(T, dtype=int), dev_cols)),
+                         shape=(1, prob["n_vars"]))
+        extra_rows.append((row, float(flat_cap)))
+    res = _solve(prob, use_milp, integrality, extra_rows=extra_rows)
     if not res.success:
         raise RuntimeError(f"{p['region']} {objective} 求解失败: {res.message}")
     primary_obj = float(res.fun)
@@ -248,8 +263,8 @@ def solve_region(p: dict, objective: str = "cost", with_storage: bool = True,
         row = coo_matrix((c1[nz], (np.zeros(len(nz), dtype=int), nz)),
                          shape=(1, len(c1)))
         tol = 1e-6 * max(1.0, abs(primary_obj))
-        res2 = _solve(prob2, with_storage, integrality,
-                      extra_ub_row=row, extra_ub_rhs=primary_obj + tol)
+        extra_rows2 = list(extra_rows) + [(row, primary_obj + tol)]
+        res2 = _solve(prob2, use_milp, integrality, extra_rows=extra_rows2)
         if res2.success:
             res = res2
 
