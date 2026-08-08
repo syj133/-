@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(python -c ' *)",
-      "Bash(python charts.py)",
-      "Bash(pip install *)"
-    ]
-  }
-}
